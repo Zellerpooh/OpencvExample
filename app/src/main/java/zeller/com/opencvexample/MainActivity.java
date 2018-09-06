@@ -1,29 +1,36 @@
 package zeller.com.opencvexample;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
 
-    // Used to load the 'native-lib' library on application startup.
-    static {
-        System.loadLibrary("native-lib");
-    }
+    private ImageView mIvFace;
+    private Bitmap mFaceBitmap;
+    private TextView tvResult;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Example of a call to a native method
-        TextView tv = (TextView) findViewById(R.id.sample_text);
-        tv.setText(stringFromJNI());
+        mIvFace = findViewById(R.id.iv_face);
+        tvResult = findViewById(R.id.tv_result);
+
+        mFaceBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.bankcard);
+        mIvFace.setImageBitmap(mFaceBitmap);
+
     }
 
-    /**
-     * A native method that is implemented by the 'native-lib' native library,
-     * which is packaged with this application.
-     */
-    public native String stringFromJNI();
+    public void facedetection(View view) {
+        String ocrResult = BankCardOcr.cardOcr(mFaceBitmap);
+        tvResult.setText(ocrResult);
+    }
+
+
 }
